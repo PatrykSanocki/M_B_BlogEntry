@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link
+  href="https://fonts.googleapis.com/css?family=Raleway&display=swap"
+  rel="stylesheet"
+/>
+  <title>Blog entry</title>
+  </head>
+    <style>
+      body {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        font-family: "Raleway", sans-serif;
+      }
+      div.hide-content {
+        visibility: hidden;
+        position: fixed;
+        z-index: 1000;
+        margin: 0;
+        padding: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 1;
+      }
+
+      header {
+        background-color: white;
+        line-height: 40px;
+        border-bottom: 1px solid black;
+        z-index: 999;
+        position: fixed;
+        left: 0;
+        right: 0;
+        margin-bottom: 15px;
+      }
+
+      .hamburger {
+        padding-left: 10px;
+        font-size: 16pt;
+        position: absolute;
+      }
+      div.site-name {
+        text-align: center;
+      }
+      div.site-name p {
+        margin: 0 auto;
+        font-size: 16pt;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      #sidebar-1 {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transition: .4s;
+        transform: translateX(-100%);
+        z-index: 1001;
+        background-color: white;
+      }
+      #sidebar-1.open {
+        transform:translateX(0);
+      }
+      .sidebar {
+        padding: 10px;
+        width: 160px;
+        margin: 0;
+      }
+      .sidebar > li {
+        list-style: none;
+        margin-bottom: 10px;
+      }
+      .sidebar > li.outer {
+        font-size: 12pt;
+      }
+      .sidebar > li.inner {
+        margin-top: -5px;
+        font-size: 10pt;
+        padding-left: 10px;
+      }
+      .sidebar a {
+        color: black;
+        text-decoration: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .close-sidebar {
+        font-size: 1.5em;
+        padding-left: 10px;
+        background-color: transparent;
+        border: none;
+      }
+      div.wrap {
+        padding-top: 50px;
+      }
+      @media (min-width: 1024px) {
+        div.wrap {
+          max-width: 1024px;
+          margin: 0 auto;
+        }
+      }
+      .card-img {
+        position: relative;
+        max-width: 100%;
+        margin: 15px 15px;
+      }
+      #top-photo {
+        position: relative;
+      }
+      video {
+        max-width: 100%;
+      }
+      .overlay-text {
+        background-color: white;
+        position: absolute;
+        bottom: 3%;
+        left: calc(10% + 15px);
+        right: 15px; 
+        z-index: 1;
+        pointer-events: none;
+      }
+      p.entry-title {
+        padding: 0 20px;
+        font-size: 15pt;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+      p.entry-subtitle {
+        font-size: 12pt;
+      }
+      p.normal-text {
+        text-align: justify;
+        padding: 0 20px;
+        text-indent: 20px;
+      }
+      p.quotation {
+        background-color: lightgrey;
+        padding: 10px;
+        margin: 10px 15px;
+        border-radius: 10px;
+        font-style: italic;
+      }
+      p.quotation span {
+        display: block;
+        font-weight: bold;
+        text-align: right;
+        font-style: normal;
+      }
+      .main-photo-wrap {
+        position: relative;
+      }
+      .big-photo {
+        box-sizing: border-box;
+        margin: 5px auto;
+        padding: 0 15px;
+      }
+
+      div.photo-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      div.photo-gallery img {
+        flex-basis: calc(100% / 2 - 20px);
+        margin: 5px;
+      }
+      div.photo-gallery img:nth-child(2n + 1) {
+        margin-left: 15px;
+      }
+      div.photo-gallery img:nth-child(2n) {
+        margin-right: 15px;
+      }
+      div.modal-gallery {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: black;
+        z-index: 2000;  
+      }
+      div.modal-gallery button#close {
+        top: 5px;
+        left: 5px;
+      }
+      .carousel {
+        position: relative;
+        max-height: 100%;
+        width: 100vw;
+        height: 100vh;
+        
+      }
+      .carousel button {
+        cursor: pointer;
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(20, 20, 20, 0.5);
+        font-size: 14pt;
+        color: white;
+        display: block;
+        z-index: 999;
+        border: none;
+      }
+      .carousel button#prev {
+        top: 50%;
+        left: 5px;
+        transform:translateY(-50%);
+      }
+      .carousel button#next {
+        top: 50%;
+        right: 5px;
+        transform:translateY(-50%);
+      }
+
+      .carousel .screen {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        max-height: 100vh;
+        max-width: 1600px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      .carousel .screen .film {
+        display:flex;
+        overflow: hidden;
+      }
+      .carousel .screen .film img {
+        width: 100%;
+        transition: .3s;
+        transform: translateX(0);
+      }
+      div.video-frame {
+        margin: 15px;
+      }
+      div.comment-section {
+        padding: 0 20px;
+        margin-bottom: 15px;
+      }
+      div.comment-section div.comment-wrap {
+        margin-top: 10px;
+      }
+      div.comment-section div.comment {
+        display: flex;
+        justify-content: space-between;
+        background-color: lightgrey;
+        padding: 0 10px;
+        border-radius: 10px;
+      }
+      div.comment-section div.comment p.comment-author {
+        flex-basis: 50px;
+        min-width: 50px;
+        margin-right: 10px;
+        position: relative;
+        text-align: center;
+      }
+      div.comment-section div.comment p.comment-author span {
+        display: block;
+        font-size: 20pt;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        line-height: 50px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px black;
+      }
+      div.comment-section div.comment p.comment-message {
+        text-align: justify;
+      }
+
+      div.comment-section div.comment p.comment-message .date-display {
+        display: block;
+        text-align: center;
+        font-weight: bold;
+      }
+      div.comment-section div.new-comment {
+        margin: 10px 0;
+      }
+      div.comment-section div.new-comment input,
+      div.comment-section div.new-comment textarea {
+        display: block;
+        margin: 10px auto;
+        padding: 5px;
+        width: 90%;
+        border: 1px solid black;
+        font-size: 11pt;
+        font-family: "Raleway", sans-serif;
+        resize: vertical;
+      }
+      div.comment-section div.new-comment input.input-submit {
+        width: auto;
+        background-color: #fff;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-radius: 6px;
+      }
+      div.comment-section p.date {
+        margin: 0;
+      }
+      div.footer {
+        position: relative;
+        padding: 15px 20px 35px 0;
+        background-color: #ddd;
+        border-top: 1px solid black;
+      }
+      div.footer p {
+        text-align: center;
+        padding: 0 20px;
+        margin: 0 0 10px 0;
+      }
+      button.scrollToTop {
+        font-family: "Raleway", sans-serif;
+        position: absolute;
+
+        left: 50%;
+        bottom: 10px;
+        transform: translateX(-50%);
+        border: 1px solid black;
+        font-size: 11pt;
+        background-color: #fff;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-radius: 6px;
+        padding: 5px;
+      }
+    </style>
+    <body>
+  </head>
+  <body>
+    <div id="hide-content-box" class="hide-content"></div>
+    <header class="headerbar">
+      <div
+        role="button"
+        on="tap:sidebar1.toggle"
+        tabindex="0"
+        class="hamburger"
+      >
+        ☰
+      </div>
+      <div class="site-name"><p>Blog</p></div>
+    </header>
+    <div id="sidebar-1" >
+      <button
+        type="button"
+        aria-label="close sidebar"
+        class="close-sidebar"
+      >
+        ✕
+      </button>
+      <ul class="sidebar">
+        <li class="outer"><a href="#entry1">I. A rabbit</a></li>
+        <li class="inner"><a href="#entry1_1">I.I. Larem lorem lor</a></li>
+        <li class="inner"><a href="#entry1_2">I.II. Lorem, ipsum dolor</a></li>
+        <li class="inner">
+          <a href="#entry1_3">I.III. Ipsum, placeat quia</a>
+        </li>
+        <li class="outer"><a href="#entry2">II. A fish</a></li>
+        <li class="inner"><a href="#entry2_1">II.I. Culpa hic totam</a></li>
+        <li class="inner">
+          <a href="#entry2_2">II.II. Minima nisi inventore</a>
+        </li>
+        <li class="outer"><a href="#entry3">III. A Snail</a></li>
+        <li class="inner">
+          <a href="#entry3_1">III.I. Error numquam quisquam</a>
+        </li>
+        <li class="inner">
+          <a href="#entry3_2">III.II. Pariatur praesentium</a>
+        </li>
+        <li class="outer"><a href="#end">END</a></li>
+        <li class="outer"><a href="#comments">Comments</a></li>
+      </ul>
+    </div>
+    <div class="wrap" id="top">
+      <div class="main-photo-wrap">
+        <img
+          class="card-img big-photo"
+          src="./pictures/hintersee-3601004_1920.jpg"
+          width="1024"
+          height="auto"
+        ></img>
+        <h1 class="overlay-text">
+          Blog entry - Lorem ipsum dolor sit.
+        </h1>
+      </div>
+      <div>
+        <p id="entry1" class="entry-title">I. A rabbit</p>
+        <p id="entry1_1" class="entry-title entry-subtitle">
+          I.I. Larem lorem lor
+        </p>
+        <p class="normal-text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias
+          expedita incidunt illo non voluptatum mollitia tenetur pariatur iure
+          voluptatibus. Error numquam quisquam vitae dignissimos, doloribus
+          reiciendis facilis dolores soluta perspiciatis corrupti magni
+          laudantium consequuntur sint, maxime voluptatum ab deleniti itaque
+          expedita amet! Ipsum quia ea velit reprehenderit a quod consectetur,
+          veniam iure veritatis, officia quo dolores obcaecati nobis incidunt
+          suscipit ad unde. Ipsum, placeat quia iure corporis obcaecati, dolore
+          omnis maiores aliquid culpa hic totam officiis rerum libero possimus
+          adipisci! Itaque odit temporibus nemo voluptatibus voluptas nihil
+          doloremque! Laboriosam voluptas debitis possimus sequi accusantium
+          doloribus saepe aliquid aut cumque temporibus.
+        </p>
+        <p class="normal-text quotation">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
+          sapiente.
+          <span>Jane Doe</span>
+        </p>
+        <p id="entry1_2" class="entry-title entry-subtitle">
+          I.II. Lorem, ipsum dolor
+        </p>
+        <p class="normal-text">
+          Laborum animi repellat laboriosam numquam dolores quis totam sed, vel,
+          quibusdam minima nisi inventore fugit doloribus ullam aspernatur vitae
+          eaque accusantium iste quas exercitationem beatae tempore. Distinctio
+          natus pariatur praesentium!
+        </p>
+
+        <div class="photo-gallery">
+          <img
+            class="card-img"
+            src="./pictures/field-176602_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img
+          ><img
+            class="card-img"
+            src="./pictures/field-3101302_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img
+          ><img
+            class="card-img"
+            src="./pictures/garda-6510155_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img
+          ><img
+            class="card-img"
+            src="./pictures/grass-3743023_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img
+          ><img
+            class="card-img"
+            src="./pictures/grain-4858574_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img
+          ><img
+            class="card-img"
+            src="./pictures/land-3799279_1920.jpg"
+            width="100"
+            height="auto"
+          >
+          </img>
+        </div>
+        <div hidden class="modal-gallery">
+          <div class="carousel">
+            <div class="screen">
+              <div class="film">
+                <img
+                src="./pictures/field-176602_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img
+              ><img
+                src="./pictures/field-3101302_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img
+              ><img
+                src="./pictures/garda-6510155_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img
+              ><img
+                src="./pictures/grass-3743023_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img
+              ><img
+                src="./pictures/grain-4858574_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img
+              ><img
+                src="./pictures/land-3799279_1920.jpg"
+                width="1920"
+                height="auto"
+              >
+              </img>
+              </div>
+              <button id="prev"><</button>
+              <button id="next">></button>
+              </div>
+              <button id="close">x</button>
+            </div>
+        </div>
+        <p id="entry1_3" class="entry-title entry-subtitle">
+          I.III. Ipsum, placeat quia
+        </p>
+        <p class="normal-text">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem veniam
+          cum obcaecati aut porro eum sint velit, quasi cumque possimus commodi
+          eius dicta! Voluptas aspernatur impedit fugit voluptates quibusdam
+          perspiciatis fuga accusantium quis quod, suscipit optio rem earum,
+          laudantium beatae nostrum nisi, tenetur corporis eveniet! Quae quia ut
+          reprehenderit adipisci quos consequuntur iusto beatae, dignissimos
+          molestias nostrum dolor laborum aperiam corrupti. Totam reiciendis
+          perspiciatis blanditiis libero soluta magni alias voluptatem amet,
+          ducimus laboriosam quaerat quisquam?
+        </p>
+      </div>
+      <div>
+        <p id="entry2" class="entry-title">II. A fish</p>
+        <p id="entry2_1" class="entry-title entry-subtitle">
+          II.I. Culpa hic totam
+        </p>
+        <p class="normal-text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias
+          expedita incidunt illo non voluptatum mollitia tenetur pariatur iure
+          voluptatibus. Error numquam quisquam vitae dignissimos, doloribus
+          reiciendis facilis dolores soluta perspiciatis corrupti magni
+          laudantium consequuntur sint, maxime voluptatum ab deleniti itaque
+          expedita amet! Ipsum quia ea velit reprehenderit a quod consectetur,
+          veniam iure veritatis, officia quo dolores obcaecati nobis incidunt
+          suscipit ad unde. Ipsum, placeat quia iure corporis obcaecati, dolore
+          omnis maiores aliquid culpa hic totam officiis rerum libero possimus
+          adipisci! Itaque odit temporibus nemo voluptatibus voluptas nihil
+          doloremque! Laboriosam voluptas debitis possimus sequi accusantium
+          doloribus saepe aliquid aut cumque temporibus.
+        </p>
+        <div>
+          <img
+            class="card-img big-photo"
+            src="./pictures/mountain-landscape-2031539_1920.jpg"
+            width="1024"
+            height="auto"
+          >
+          </img>
+        </div>
+        <p class="normal-text quotation">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
+          sapiente.
+          <span>Jane Doe</span>
+        </p>
+
+        <p class="normal-text">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et doloremque
+          consequuntur delectus iste, quae placeat quasi ducimus voluptatem
+          tenetur maxime!
+        </p>
+        <div>
+          <img
+            class="card-img big-photo"
+            src="./pictures/mountains-6513559_1920.jpg"
+            width="1024"
+            height="auto"
+          >
+          </img>
+        </div>
+        <p class="normal-text quotation">
+          Laboriosam voluptas debitis possimus sequi accusantium doloribus saepe
+          aliquid aut cumque temporibus.
+          <span>Frog</span>
+        </p>
+        <p class="normal-text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni
+          repudiandae voluptas quas tempore voluptate tenetur vitae id
+          recusandae, consequuntur aut consectetur earum! Sit perspiciatis alias
+          illo totam, impedit debitis aperiam.
+        </p>
+        <div>
+          <img
+            class="card-img big-photo"
+            src="./pictures/nature-6515696_1920.jpg"
+            width="1024"
+            height="auto"
+          >
+          </img>
+        </div>
+        <p class="normal-text quotation">
+          Exercitationem beatae tempore. Distinctio natus pariatur praesentium!
+          <span>Genius</span>
+        </p>
+        <p class="normal-text">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestias,
+          laboriosam iste! Eum rem, adipisci ex, iusto mollitia voluptatum
+          reiciendis dicta a expedita ducimus, voluptatibus quasi cupiditate
+          ipsum possimus quo praesentium nisi quas accusamus quis! Nisi dicta
+          odit delectus cumque ipsa!
+        </p>
+        <p id="entry2_2" class="entry-title entry-subtitle">
+          II.II. Minima nisi inventore
+        </p>
+        <p class="normal-text">
+          Laborum animi repellat laboriosam numquam dolores quis totam sed, vel,
+          quibusdam minima nisi inventore fugit doloribus ullam aspernatur vitae
+          eaque accusantium iste quas exercitationem beatae tempore. Distinctio
+          natus pariatur praesentium!
+        </p>
+        <div class="video-frame">
+          <video controls 
+          width="1024"
+          height="auto"
+          >
+            <source src="./videos/Mountain - 22512.mp4" type="video/mp4" />
+              <p>This browser does not support the video element.</p>
+          </video>
+        </div>
+      </div>
+      <div>
+        <p id="entry3" class="entry-title">III. A Snail</p>
+        <p id="entry3_1" class="entry-title entry-subtitle">
+          III.I. Error numquam quisquam
+        </p>
+        <p class="normal-text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias
+          expedita incidunt illo non voluptatum mollitia tenetur pariatur iure
+          voluptatibus. Error numquam quisquam vitae dignissimos, doloribus
+          reiciendis facilis dolores soluta perspiciatis corrupti magni
+          laudantium consequuntur sint, maxime voluptatum ab deleniti itaque
+          expedita amet! Ipsum quia ea velit reprehenderit a quod consectetur,
+          veniam iure veritatis, officia quo dolores obcaecati nobis incidunt
+          suscipit ad unde. Ipsum, placeat quia iure corporis obcaecati, dolore
+          omnis maiores aliquid culpa hic totam officiis rerum libero possimus
+          adipisci! Itaque odit temporibus nemo voluptatibus voluptas nihil
+          doloremque! Laboriosam voluptas debitis possimus sequi accusantium
+          doloribus saepe aliquid aut cumque temporibus.
+        </p>
+        <div>
+          <img
+            class="card-img big-photo"
+            src="./pictures/forest-3119826_1920.jpg"
+            width="1024"
+            height="auto"
+          >
+          </img>
+          <div>
+            <img
+              class="card-img big-photo"
+              src="./pictures/terminal-moraine-6506920_1920.jpg"
+              width="1024"
+              height="auto"
+            >
+            </img>
+          </div>
+          <div>
+            <img
+              class="card-img big-photo"
+              src="./pictures/tree-3398108_1920.jpg"
+              width="1024"
+              height="auto"
+            >
+            </img>
+          </div>
+        </div>
+        <p id="entry2_2" class="entry-title entry-subtitle">
+          III.II. Pariatur praesentium
+        </p>
+        <p class="normal-text">
+          Laborum animi repellat laboriosam numquam dolores quis totam sed, vel,
+          quibusdam minima nisi inventore fugit doloribus ullam aspernatur vitae
+          eaque accusantium iste quas exercitationem beatae tempore. Distinctio
+          natus pariatur praesentium!
+        </p>
+      </div>
+      <div>
+        <p id="end" class="entry-title">END</p>
+        <p class="normal-text">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias
+          expedita incidunt illo non voluptatum mollitia tenetur pariatur iure
+          voluptatibus. Error numquam quisquam vitae dignissimos, doloribus
+          reiciendis facilis dolores soluta perspiciatis corrupti magni
+          laudantium consequuntur sint, maxime voluptatum ab deleniti itaque
+          expedita amet! Ipsum quia ea velit reprehenderit a quod consectetur,
+          veniam iure veritatis, officia quo dolores obcaecati nobis incidunt
+          suscipit ad unde. Ipsum, placeat quia iure corporis obcaecati, dolore
+          omnis maiores aliquid culpa hic totam officiis rerum libero possimus
+          adipisci! Itaque odit temporibus nemo voluptatibus voluptas nihil
+          doloremque! Laboriosam voluptas debitis possimus sequi accusantium
+          doloribus saepe aliquid aut cumque temporibus.
+        </p>
+      </div>
+      <div class="comment-section" id="comments">
+        <p class="entry-title">Comments</p>
+        <div class="comment-wrap">
+          <p class="date">02.08.2017 12:07</p>
+          <div class="comment">
+            <p class="comment-author"><span>E</span></p>
+
+            <p class="comment-message">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum
+              dolor ipsum nesciunt sed velit qui, fugiat dignissimos.
+              Praesentium dolore quisquam facere labore laborum, maxime nobis
+              non culpa, corrupti vero, eum rerum magnam fuga laudantium
+              dignissimos.
+            </p>
+          </div>
+        </div>
+        <div class="comment-wrap">
+          <p class="date">02.08.2017 16:08</p>
+          <div class="comment">
+            <p class="comment-author"><span>S</span></p>
+
+            <p class="comment-message">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Quibusdam, perspiciatis? Commodi, nisi? Velit, quae quos est
+              soluta facere quaerat quas.
+            </p>
+          </div>
+        </div>
+        <div class="comment-wrap">
+          <p class="date">03.08.2017 17:01</p>
+          <div class="comment">
+            <p class="comment-author"><span>M</span></p>
+
+            <p class="comment-message">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti
+              repudiandae reiciendis voluptatibus, delectus iste quam velit eum
+              laborum dicta fuga hic tenetur, id nihil! Est consequuntur
+              mollitia sequi officiis quod.
+            </p>
+          </div>
+        </div>
+        <div class="new-comment">
+          <form
+            id="comment-form"
+            class="sample-form"
+            method="post"
+            action-xhr="#comment-form"
+          >
+            <input type="text" name="name" placeholder="Name..." required />
+
+            <textarea
+              type="text"
+              placeholder="Comment..."
+              rows="4"
+              autoexpand
+              required
+            ></textarea>
+            <input class="input-submit" type="submit" value="Post comment" />
+
+          </form>
+          <p hidden class="posted">Your comment has been posted!</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <button
+        id="scrollToTopButton"
+        class="scrollToTop"
+      >
+        Go to top
+      </button>
+    </div>
+  </body>
+</html>
+<script>
+  document.addEventListener("DOMContentLoaded", function (event) {
+  let hamburgerBtn = document.querySelector('.hamburger');
+  let sidebar = document.querySelector('#sidebar-1');
+  let closeSidebarBtn = document.querySelector('.close-sidebar');
+  let hideContent = document.querySelector('#hide-content-box');
+  let wrapDiv = document.querySelector('.wrap');
+
+  hamburgerBtn.addEventListener('click', () => {
+    sidebar.className = "open";
+    hideContent.style.visibility = "visible";
+    document.body.style.overflow="hidden"
+    
+  })
+  closeSidebarBtn.addEventListener('click', () => {
+    sidebar.className = "";
+    hideContent.style.visibility = "hidden";
+    document.body.style.overflow="auto"
+  })
+
+  let commentForm = document.querySelector('#comment-form');
+  commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    document.querySelector('.posted').removeAttribute('hidden');
+  })
+
+  let scrollToTopButton = document.querySelector('#scrollToTopButton').addEventListener('click', () => {
+    window.scrollTo(0, 0);
+  })
+})
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function (event) {
+  let clickCount;
+  let modalGallery = document.querySelector(".modal-gallery");
+  let images = document.querySelectorAll(".photo-gallery .card-img");
+  images.forEach((i, index) =>
+    i.addEventListener("click", () => {
+      clickCount = 1200000 + index;
+      carouselImgs.forEach(
+        (i) => (i.style.transform = `translateX(-${(clickCount % 6) * 100}%)`)
+      );
+      modalGallery.removeAttribute("hidden");
+    })
+  );
+
+  let modalGalleryBtnClose = document.querySelector("button#close ");
+  modalGalleryBtnClose.addEventListener("click", () => {
+    modalGallery.setAttribute("hidden", "true");
+  });
+
+  let btnPrev = document.querySelector("#prev");
+  let btnNext = document.querySelector("#next");
+  let carouselImgs = document.querySelectorAll(".carousel .screen .film img");
+  btnPrev.addEventListener("click", () => {
+    clickCount--;
+    carouselImgs.forEach(
+      (i) => (i.style.transform = `translateX(-${(clickCount % 6) * 100}%)`)
+    );
+  });
+
+  btnNext.addEventListener("click", () => {
+    clickCount++;
+    carouselImgs.forEach(
+      (i) => (i.style.transform = `translateX(-${(clickCount % 6) * 100}%)`)
+    );
+  });
+});
+
+</script>
